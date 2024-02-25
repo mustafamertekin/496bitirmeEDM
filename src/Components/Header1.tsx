@@ -25,7 +25,7 @@ export function Header1() {
       <Header height={70} px="md" sx={{ backgroundColor: headerBlue }}>
         <Group position="apart" sx={{ height: "100%", display: "flex" }}>
           <Image src={logo} width={102}  />
-          {user ? (
+          { 1? (
             <Group>
               <Button sx={{ backgroundColor: headerBlue }} onClick={handleLogout}>
                Çıkış Yap 
