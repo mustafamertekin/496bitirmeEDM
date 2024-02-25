@@ -6,6 +6,7 @@ import {
   Container,
   Button,
   Notification,
+  Footer,
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
@@ -84,5 +85,8 @@ export function Login() {
         </Button>
       </Paper>
     </Container>
+
+
+    
   );
 }
