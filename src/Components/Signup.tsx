@@ -15,49 +15,21 @@ import { IconAt, IconCheck, IconX } from "@tabler/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { sha256 } from "js-sha256";
 import { useState } from "react";
+import { auth } from "../firebase/firebase";
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 export default function Signup() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [errShow, setErrShow] = useState(false);
-  const [email, setEmail] = useState("");
+  const [mail, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const headerBlue = '#1F2D5A';
 
   const backendUrl = "http://localhost:8081"; 
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    var raw = JSON.stringify({
-      email: email,
-      password: sha256(password),
-    });
-    var requestOptions: any = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    fetch(`${backendUrl}/api/users/signUp`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log('result', result)
-        if(result === false){
-            setErrShow(true);
-            setTimeout(()=>{
-                setErrShow(false)
-            }, 2000)
-        }else{
-            setShow(true);
-            setTimeout(() => {
-              setShow(false);
-              navigate("/login");
-            }, 3000);
-        }
-      })
-      .catch((error) => console.log("error", error));
+  const handleSubmit = async () => {
+    await createUserWithEmailAndPassword(auth, mail, password);
   };
 
   return (

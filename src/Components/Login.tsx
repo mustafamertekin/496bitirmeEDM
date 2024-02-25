@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IconX } from "@tabler/icons";
 import { sha256 } from "js-sha256";
+import { auth } from "../firebase/firebase";
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 export function Login() {
   const [password, setPassword] = useInputState("");
@@ -30,20 +32,8 @@ export function Login() {
       navigate("/dataframe")
     }
   }, [])
-  const loginClick = () => {
-    if (mail === "") {
-      setShow(true);
-      return;
-    }
-    axios
-      .post(`${backendUrl}/api/users/login?mail=${mail}&password=${sha256(password)}`)
-      .then((response) => {
-        if (response.data === true) {
-          localStorage.setItem("user", response.data);
-          navigate("/dataframe");
-        } else setShow(true);
-      });
-
+  const loginClick = async () => {
+    
   };
   return (
     <Container size={440} my={60}>
