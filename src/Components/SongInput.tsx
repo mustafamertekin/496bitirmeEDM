@@ -1,86 +1,92 @@
-import { Autocomplete, Loader} from '@mantine/core';
-import { useState, useRef } from 'react';
-import { useInterval } from '@mantine/hooks';
-import { Button, Progress, useMantineTheme,  } from '@mantine/core';
+import { Autocomplete, Button, Progress, useMantineTheme } from '@mantine/core';
+import React, { useState } from 'react';
 import classes from './ButtonProgress.module.css';
-function AutocompleteLoading() {
-  const timeoutRef = useRef<number>(-1);
+import { useInterval } from '@mantine/hooks';
+
+interface AutocompleteLoadingProps {}
+
+const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
   const [value, setValue] = useState('');
-  const [data, setData] = useState<string[]>([]);
   const [value2, setValue2] = useState('');
-  const [data2, setData2] = useState<string[]>([]);
   const [value3, setValue3] = useState('');
-  const [data3, setData3] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (val: string) => {
-    window.clearTimeout(timeoutRef.current);
     setValue(val);
-    setData([]);
-  };
-  const handleChange2 = (val: string) => {
-    window.clearTimeout(timeoutRef.current);
-    setValue2(val);
-    setData2([]);
-  };
-  const handleChange3 = (val: string) => {
-    window.clearTimeout(timeoutRef.current);
-    setValue3(val);
-    setData3([]);
   };
 
-  const autocompleteStyle = {
-    marginBottom: '30px', // Add margin bottom
+  const handleChange2 = (val: string) => {
+    setValue2(val);
+  };
+
+  const handleChange3 = (val: string) => {
+    setValue3(val);
+  };
+
+  const handleClick = async () => {
+    setLoading(true);
+
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ songName: value, artist: value2, genre: value3 }),
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/generate_song_names', requestOptions);
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+    setLoading(false);
   };
 
   return (
-    <div>
+    <div className={classes.container}>
       <Autocomplete
         value={value}
-        data={data}
         onChange={handleChange}
         label="Şarkı İsmi Girin"
         placeholder=""
         styles={{
-          input: { color: 'black' }, // Set text color to black
-          label: { color: 'white' }, // Set label color to white
+          input: { color: 'black' },
+          label: { color: 'white' },
         }}
-        style={autocompleteStyle} // Apply margin bottom style
-      />
+        style={{ marginBottom: '30px' }} data={[]}      />
       <Autocomplete
         value={value2}
-        data={data2}
         onChange={handleChange2}
         label="Müzisyen Girin"
         placeholder=""
         styles={{
-          input: { color: 'black' }, // Set text color to black
-          label: { color: 'white' }, // Set label color to white
+          input: { color: 'black' },
+          label: { color: 'white' },
         }}
-        style={autocompleteStyle} // Apply margin bottom style
-      />
+        style={{ marginBottom: '30px' }} data={[]}      />
       <Autocomplete
         value={value3}
-        data={data3}
         onChange={handleChange3}
         label="Müzik Türü Girin"
         placeholder=""
         styles={{
-          input: { color: 'black' }, // Set text color to black
-          label: { color: 'white' }, // Set label color to white
+          input: { color: 'black' },
+          label: { color: 'white' },
         }}
-        style={autocompleteStyle} // Apply margin bottom style
-      />
-      <div style={{ marginTop: '30px' }}> {/* Add margin top */}
-        <ButtonProgress />
+        style={{ marginBottom: '30px' }} data={[]}      />
+      <div className={classes.buttonContainer}>
+        <Button fullWidth onClick={handleClick} disabled={loading}>
+          {loading ? 'Öneriler Bulunuyor' : 'Şarkı Önerisi Yap'}
+        </Button>
+        {loading && <Progress color="red" radius="sm" />}
       </div>
     </div>
   );
-}
+};
 
 export default AutocompleteLoading;
 
-
- 
 
 function ButtonProgress() {
   const theme = useMantineTheme();
@@ -106,7 +112,6 @@ function ButtonProgress() {
       fullWidth
       className={classes.button}
       onClick={() => (loaded ? setLoaded(false) : !interval.active && interval.start())}
-      color={loaded ? 'teal' : theme.primaryColor}
     >
       <div className={classes.label}>
         {progress !== 0 ? 'Öneriler Bulunuyor' : loaded ? 'Öneriler Oluşturuldu' : 'Şarkı Önerisi Yap'}
