@@ -10,34 +10,38 @@ import {
 } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IconX } from "@tabler/icons";
 import { sha256 } from "js-sha256";
 import { auth } from "../firebase/firebase";
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import {  signInWithEmailAndPassword } from 'firebase/auth'
+import { doSignInWithEmailAndPassword } from "../firebase/auth";
+
 
 export function Login() {
+  const [userLoggedIn, setUserloggedIn] = useState(false);
   const [password, setPassword] = useInputState("");
   const [mail, setMail] = useInputState("");
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const user = localStorage.getItem("user");
-  const headerBlue = '#1F2D5A';
+  const [isSigningIn,setIsSigningIn] = useState(false);
+  const headerBlue = '#1F2D5A';; 
 
-
-  const backendUrl ="http://localhost:8081"; 
-
-  useEffect(()=>{
-    if (user) {
-      navigate("/dataframe")
-    }
-  }, [])
   const loginClick = async () => {
-    
+    if(!isSigningIn){
+      setIsSigningIn(true);
+      await signInWithEmailAndPassword(auth, mail, password)
+      .then((userLogin) =>{
+          setUserloggedIn(true);
+          navigate("/dataframe")
+      });
+      setIsSigningIn(false);
+    }
   };
   return (
     <Container size={440} my={60}>
+      {userLoggedIn && (<Navigate to={'/dataframe'} replace={true} />)}
       {show ? (
         <Notification
           icon={<IconX size={18} />}

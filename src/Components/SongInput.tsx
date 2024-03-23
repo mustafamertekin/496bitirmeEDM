@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Progress, useMantineTheme } from '@mantine/core';
+import { Autocomplete, Button, Progress, Stack, useMantineTheme } from '@mantine/core';
 import React, { useState } from 'react';
 import classes from './ButtonProgress.module.css';
 import { useInterval } from '@mantine/hooks';
@@ -6,6 +6,9 @@ import { useInterval } from '@mantine/hooks';
 interface AutocompleteLoadingProps {}
 
 const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
+ 
+
+  const [results, setResults] = useState('Initial Value');;
   const [value, setValue] = useState('');
   const [value2, setValue2] = useState('');
   const [value3, setValue3] = useState('');
@@ -35,11 +38,12 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     try {
       const response = await fetch('http://127.0.0.1:5000/generate_song_names', requestOptions);
       const data = await response.json();
-      console.log(data);
+      console.log(data.songNames);
+      setResults(data.songNames);
+      console.log(String(results[0]));
     } catch (error) {
       console.error('Error:', error);
     }
-
     setLoading(false);
   };
 
@@ -81,6 +85,24 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
         </Button>
         {loading && <Progress color="red" radius="sm" />}
       </div>
+      <Stack
+    style={{border: '1px solid white', padding: '5px'}}
+      h={508}
+      bg="var(--mantine-color-body)"
+
+    >
+      <Button variant="default">{results[0]}</Button>
+      <Button variant="default">{results[1]}</Button>
+      <Button variant="default">{results[2]}</Button>
+      <Button variant="default">{results[3]}</Button>
+      <Button variant="default">{results[4]}</Button>
+      <Button variant="default">{results[5]}</Button>
+      <Button variant="default">{results[6]}</Button>
+      <Button variant="default">{results[7]}</Button>
+      <Button variant="default">{results[8]}</Button>
+      <Button variant="default">{results[9]}</Button>
+
+    </Stack>
     </div>
   );
 };

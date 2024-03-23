@@ -14,9 +14,14 @@ chat = model.start_chat(history=[])
 @app.route('/generate_song_names', methods=['POST'])
 def generate_song_names():
     data = request.get_json()
-    app_input = data.get('input')
+    app_input = data.get('songName')
+    app_input += " "
+    app_input += data.get('artist')
+    app_input += " "
+    app_input += data.get('genre')
 
     question = f"{app_input} benzeri 10 tane şarkı ismi listele sadece şarkının sanatçısını ve adını yaz."
+    print(question)
 
     response = chat.send_message(question)
     app_output = response.text

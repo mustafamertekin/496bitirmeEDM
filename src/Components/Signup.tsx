@@ -30,6 +30,8 @@ export default function Signup() {
 
   const handleSubmit = async () => {
     await createUserWithEmailAndPassword(auth, mail, password);
+    localStorage.clear();
+    navigate("/login");
   };
 
   return (

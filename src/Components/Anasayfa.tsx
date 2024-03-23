@@ -18,7 +18,6 @@ function App() {
       <div style={{ flex: '1', marginLeft: '20px', marginRight: '20px' }}>
         <SongInput/> 
         <div style={{ marginTop: '20px' }}> {/* Boşluk eklemek için */}
-          <Results/>
         </div>
       </div>
       <div style={{ flex: '1' }}></div>
