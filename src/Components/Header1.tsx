@@ -6,17 +6,19 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import logo from "../Images/EDM1.png";
+import { useAuth } from "../context/authContext";
+import { doSignOut } from "../firebase/auth";
 
 
 export function Header1() {
+  const {userLoggedIn}= useAuth();
   const navigate = useNavigate();
   const headerBlue = '#1F2D5A';
-  const user = localStorage.getItem("user");
     useDisclosure(false);
-  const handleLogout = () => {
-    localStorage.clear();
+  const handleLogout = async () => {
+    await doSignOut();
     navigate("/login");
   };
 
@@ -25,7 +27,7 @@ export function Header1() {
       <Header height={70} px="md" sx={{ backgroundColor: headerBlue }}>
         <Group position="apart" sx={{ height: "100%", display: "flex" }}>
           <Image src={logo} width={102}  />
-          { user? (
+          { userLoggedIn? (
             <Group>
               <Button sx={{ backgroundColor: headerBlue }} onClick={handleLogout}>
                Çıkış Yap 

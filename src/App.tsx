@@ -3,10 +3,11 @@ import { Login } from "./Components/Login";
 import { Anasayfa } from "./Components/Anasayfa";
 import { Header1 } from "./Components/Header1";
 import Signup from "./Components/Signup";
+import { AuthProvider } from "./context/authContext";
 
 export default function App() {
   return (
-    <>
+    <AuthProvider>
       {/* <SimpleHeader links={data} /> */}
       <Header1 />
       <Routes>
@@ -16,6 +17,6 @@ export default function App() {
         <Route path="/dataframe" element={<Anasayfa />} />
         <Route path='*' element={<Login />}/>
       </Routes>
-    </>
+    </AuthProvider>
   );
 }

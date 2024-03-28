@@ -17,10 +17,12 @@ import { sha256 } from "js-sha256";
 import { auth } from "../firebase/firebase";
 import {  signInWithEmailAndPassword } from 'firebase/auth'
 import { doSignInWithEmailAndPassword } from "../firebase/auth";
+import { useAuth } from "../context/authContext";
+
 
 
 export function Login() {
-  const [userLoggedIn, setUserloggedIn] = useState(false);
+  const {userLoggedIn}= useAuth();
   const [password, setPassword] = useInputState("");
   const [mail, setMail] = useInputState("");
   const navigate = useNavigate();
@@ -29,14 +31,11 @@ export function Login() {
   const headerBlue = '#1F2D5A';; 
 
   const loginClick = async () => {
-    if(!isSigningIn){
+    if(!isSigningIn){ 
       setIsSigningIn(true);
-      await signInWithEmailAndPassword(auth, mail, password)
-      .then((userLogin) =>{
-          setUserloggedIn(true);
-          navigate("/dataframe")
-      });
-      setIsSigningIn(false);
+      await doSignInWithEmailAndPassword(mail, password).catch((e) => {
+        console.log(e)
+      })
     }
   };
   return (
