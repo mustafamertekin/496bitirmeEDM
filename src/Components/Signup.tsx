@@ -12,13 +12,16 @@ import {
   Title,
 } from "@mantine/core";
 import { IconAt, IconCheck, IconX } from "@tabler/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { sha256 } from "js-sha256";
 import { useState } from "react";
 import { auth } from "../firebase/firebase";
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
 
 export default function Signup() {
+  const [isRegisterComplete,setIsRegisterComplete] = useState(false);
+  const [isRegistering,setIsRegistering] = useState(false);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [errShow, setErrShow] = useState(false);
@@ -29,13 +32,30 @@ export default function Signup() {
   const backendUrl = "http://localhost:8081"; 
 
   const handleSubmit = async () => {
-    await createUserWithEmailAndPassword(auth, mail, password);
-    localStorage.clear();
-    navigate("/login");
+    debugger
+    if(!isRegistering){ 
+      setIsRegistering(true);
+      try{
+        if(await doCreateUserWithEmailAndPassword(mail, password).catch((e) => {
+        console.log(e)
+        setIsRegisterComplete(false);
+        if(e!=null){
+          setErrShow(true)
+        }
+      })){
+        setIsRegisterComplete(true);
+      }
+      }
+      catch {
+      
+      }
+    }
+    setIsRegistering(false);
   };
 
   return (
     <Container size={900} my={60}>
+      {isRegisterComplete && (<Navigate to={'/login'} replace={true} />)}
       <Card
         shadow="sm"
         radius="md"
@@ -67,7 +87,7 @@ export default function Signup() {
           ) : null}
           {errShow ? (
             <Notification icon={<IconX size="1.1rem" />} color="red">
-                Mail zaten kullanılıyor!
+                Mail zaten kullanılıyor veya hatali mail girdiniz.
             </Notification>
           ) : null}
 
@@ -117,7 +137,7 @@ export default function Signup() {
               md={4}
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
-              <Button m={-6} sx={{ backgroundColor: headerBlue }} type="submit">Kayıt Ol</Button>
+              <Button m={-6} sx={{ backgroundColor: headerBlue }} onClick={handleSubmit} >Kayıt Ol</Button>
             </Grid.Col>
           </form>
         </Grid>

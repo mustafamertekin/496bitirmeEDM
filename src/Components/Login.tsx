@@ -22,6 +22,7 @@ import { useAuth } from "../context/authContext";
 
 
 export function Login() {
+  const [errorMessage, setErrorMessage]= useInputState("");
   const {userLoggedIn}= useAuth();
   const [password, setPassword] = useInputState("");
   const [mail, setMail] = useInputState("");
@@ -33,9 +34,20 @@ export function Login() {
   const loginClick = async () => {
     if(!isSigningIn){ 
       setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(mail, password).catch((e) => {
+      try{
+       await doSignInWithEmailAndPassword(mail, password).catch((e) => {
+        debugger
         console.log(e)
+        setErrorMessage(e);
+        if(e!=null){
+          setShow(true)
+        }
       })
+      }
+      catch{
+
+      }
+      setIsSigningIn(false);
     }
   };
   return (
