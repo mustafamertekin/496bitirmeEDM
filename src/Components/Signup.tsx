@@ -106,7 +106,7 @@ export default function Signup() {
               <PasswordInput
                 placeholder="Şifre"
                 label="Şifre"
-                description="Şifre en az bir harf, sayı ve özel karakter içermelidir."
+                description="Şifre en az 6 haneden oluşmalıdır."
                 id="password"
                 name="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -114,10 +114,10 @@ export default function Signup() {
               />
             </Grid.Col>
             <Grid.Col
-              md={4}
+              md={5}
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
-              <Button m={-6} sx={{ backgroundColor: headerBlue }} type="submit">Kayıt Ol</Button>
+              <Button m={-10} sx={{ backgroundColor: headerBlue }} type="submit">Kayıt Ol</Button>
             </Grid.Col>
           </form>
         </Grid>
