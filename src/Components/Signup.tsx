@@ -14,48 +14,48 @@ import {
 import { IconAt, IconCheck, IconX } from "@tabler/icons";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { sha256 } from "js-sha256";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../firebase/firebase";
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
 
 export default function Signup() {
-  const [isRegisterComplete,setIsRegisterComplete] = useState(false);
-  const [isRegistering,setIsRegistering] = useState(false);
+  const [isRegisterComplete, setIsRegisterComplete] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [errShow, setErrShow] = useState(false);
   const [mail, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const headerBlue = '#1F2D5A';
+  const headerBlue = "#1F2D5A";
 
-  const backendUrl = "http://localhost:8081"; 
 
-  const handleSubmit = async () => {
-    debugger
-    if(!isRegistering){ 
+  const handleSubmit = () => {
+    if (!isRegistering) {
       setIsRegistering(true);
-      try{
-        if(await doCreateUserWithEmailAndPassword(mail, password).catch((e) => {
-        console.log(e)
-        setIsRegisterComplete(false);
-        if(e!=null){
-          setErrShow(true)
-        }
-      })){
-        setIsRegisterComplete(true);
-      }
-      }
-      catch {
-      
-      }
+
+      doCreateUserWithEmailAndPassword(mail, password)
+        .catch((e) => {
+          console.log(e);
+          setIsRegisterComplete(false);
+          if (e != null) {
+            setErrShow(true);
+          }
+          setIsRegistering(false);
+        })
+        .then((res) => {
+          console.log(res);
+          if(res){
+            setIsRegisterComplete(true);
+          }
+          setIsRegistering(false);
+        });
     }
-    setIsRegistering(false);
   };
 
   return (
     <Container size={900} my={60}>
-      {isRegisterComplete && (<Navigate to={'/login'} replace={true} />)}
+      {isRegisterComplete && <Navigate to={"/login"} replace={true} />}
       <Card
         shadow="sm"
         radius="md"
@@ -87,7 +87,7 @@ export default function Signup() {
           ) : null}
           {errShow ? (
             <Notification icon={<IconX size="1.1rem" />} color="red">
-                Mail zaten kullanılıyor veya hatali mail girdiniz.
+              Mail zaten kullanılıyor veya hatali mail girdiniz.
             </Notification>
           ) : null}
 
@@ -104,7 +104,7 @@ export default function Signup() {
             <Text color="dimmed" size="sm" align="center" mt={5}>
               Zaten Kayıtlı mısın?
               <Link to="/login">
-                <Anchor size="sm" component="button" sx={{color : headerBlue}}>
+                <Anchor size="sm" component="button" sx={{ color: headerBlue }}>
                   Giriş Yap
                 </Anchor>
               </Link>
@@ -137,7 +137,13 @@ export default function Signup() {
               md={4}
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
-              <Button m={-6} sx={{ backgroundColor: headerBlue }} onClick={handleSubmit} >Kayıt Ol</Button>
+              <Button
+                m={-6}
+                sx={{ backgroundColor: headerBlue }}
+                onClick={handleSubmit}
+              >
+                Kayıt Ol
+              </Button>
             </Grid.Col>
           </form>
         </Grid>

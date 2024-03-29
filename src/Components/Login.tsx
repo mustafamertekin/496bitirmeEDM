@@ -34,21 +34,14 @@ export function Login() {
   const loginClick = async () => {
     if(!isSigningIn){ 
       setIsSigningIn(true);
-      try{
        await doSignInWithEmailAndPassword(mail, password).catch((e) => {
-        debugger
         console.log(e)
         setErrorMessage(e);
-        if(e!=null){
-          setShow(true)
-        }
+        setShow(true)
       })
-      }
-      catch{
-
-      }
       setIsSigningIn(false);
     }
+    
   };
   return (
     <Container size={440} my={60}>
