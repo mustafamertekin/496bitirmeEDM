@@ -8,7 +8,7 @@ interface AutocompleteLoadingProps {}
 const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
  
 
-  const [results, setResults] = useState('Initial Value');;
+  const [results, setResults] = useState('');;
   const [value, setValue] = useState('');
   const [value2, setValue2] = useState('');
   const [value3, setValue3] = useState('');
@@ -52,7 +52,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       <Autocomplete
         value={value}
         onChange={handleChange}
-        label="Şarkı İsmi Girin"
+        label="Şarkı İsmi Girin (Şarkı İsmi - Sanatçı)"
         placeholder=""
         styles={{
           input: { color: 'black' },
@@ -85,8 +85,8 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
         </Button>
         {loading && <Progress color="red" radius="sm" />}
       </div>
-      <Stack
-    style={{border: '1px solid white', padding: '5px'}}
+      {results.length>0 && <Stack
+    style={{ padding: '15px'}}
       h={508}
       bg="var(--mantine-color-body)"
 
@@ -102,7 +102,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       <Button variant="default">{results[8]}</Button>
       <Button variant="default">{results[9]}</Button>
 
-    </Stack>
+    </Stack>}
     </div>
   );
 };

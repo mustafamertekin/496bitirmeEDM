@@ -38,7 +38,6 @@ export function Anasayfa() {
   return (
     <div style={{ backgroundColor: headerBlue, minHeight: '100vh', padding: '100px' }}>
       <App />
-      <FooterSimple />
     </div>
   );
 }
@@ -50,24 +49,4 @@ const links = [
   { link: '#', label: 'Kariyer' },
 ];
 
-function FooterSimple() {
-  const items = links.map((link) => (
-    <Anchor<'a'>
-      c="dimmed"
-      key={link.label}
-      href={link.link}
-      onClick={(event) => event.preventDefault()}
-      size="sm"
-    >
-      {link.label}
-    </Anchor>
-  ));
 
-  return (
-    <div className={classes.footer} style={{ position: 'fixed', bottom: 20, width: '130%' }}>
-      <Container className={classes.inner} >
-        <Group className={classes.links}>{items}</Group>
-      </Container>
-    </div>
-  );
-}

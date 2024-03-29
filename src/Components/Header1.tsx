@@ -29,7 +29,19 @@ export function Header1() {
           <Image src={logo} width={102}  />
           { userLoggedIn? (
             <Group>
-              <Button sx={{ backgroundColor: headerBlue }} onClick={handleLogout}>
+              <Button sx={{ backgroundColor: headerBlue }} >
+              Bize Ulaşın 
+              </Button>
+              <Button sx={{ backgroundColor: headerBlue }} >
+              Güvenlik
+              </Button>
+              <Button sx={{ backgroundColor: headerBlue }} >
+              Hakkında 
+              </Button>
+              <Button sx={{ backgroundColor: headerBlue }} >
+              Kariyer 
+              </Button>
+              <Button sx={{ backgroundColor: "red" ,color: "white"}} onClick={handleLogout}>
                Çıkış Yap 
               </Button>
             </Group>
