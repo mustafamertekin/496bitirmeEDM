@@ -22,6 +22,7 @@ import { useAuth } from "../context/authContext";
 
 
 export function Login() {
+  const [errorMessage, setErrorMessage]= useInputState("");
   const {userLoggedIn}= useAuth();
   const [password, setPassword] = useInputState("");
   const [mail, setMail] = useInputState("");
@@ -33,10 +34,14 @@ export function Login() {
   const loginClick = async () => {
     if(!isSigningIn){ 
       setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(mail, password).catch((e) => {
+       await doSignInWithEmailAndPassword(mail, password).catch((e) => {
         console.log(e)
+        setErrorMessage(e);
+        setShow(true)
       })
+      setIsSigningIn(false);
     }
+    
   };
   return (
     <Container size={440} my={60}>
