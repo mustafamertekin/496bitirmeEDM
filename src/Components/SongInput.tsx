@@ -49,7 +49,8 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
 
   return (
     <div className={classes.container}>
-      <Autocomplete
+    <div className={classes.autocompleteContainer} >
+      <Autocomplete 
         value={value}
         onChange={handleChange}
         label="Şarkı İsmi Girin (Şarkı İsmi - Sanatçı)"
@@ -58,7 +59,12 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
           input: { color: 'black' },
           label: { color: 'white' },
         }}
-        style={{ marginBottom: '30px' }} data={[]}      />
+        data={[]}
+      />
+      <Button size="sm" style={{ marginTop: '10px' }}>Şarkıyı profilime ekle</Button>
+    </div>
+
+    <div className={classes.autocompleteContainer}>
       <Autocomplete
         value={value2}
         onChange={handleChange2}
@@ -68,7 +74,12 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
           input: { color: 'black' },
           label: { color: 'white' },
         }}
-        style={{ marginBottom: '30px' }} data={[]}      />
+        data={[]}
+      />
+      <Button size="sm" style={{ marginTop: '10px' }} >Müzisyeni profilime ekle</Button>
+    </div>
+
+    <div className={classes.autocompleteContainer}>
       <Autocomplete
         value={value3}
         onChange={handleChange3}
@@ -78,9 +89,12 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
           input: { color: 'black' },
           label: { color: 'white' },
         }}
-        style={{ marginBottom: '30px' }} data={[]}      />
+        data={[]}
+      />
+      <Button size="sm" style={{ marginTop: '10px'}} >Müzik türünü profilime ekle</Button>
+    </div>
       <div className={classes.buttonContainer}>
-        <Button fullWidth onClick={handleClick} disabled={loading}>
+        <Button fullWidth onClick={handleClick}  style={{ marginTop: '30px' }} disabled={loading}>
           {loading ? 'Öneriler Bulunuyor' : 'Şarkı Önerisi Yap'}
         </Button>
         {loading && <Progress color="red" radius="sm" />}

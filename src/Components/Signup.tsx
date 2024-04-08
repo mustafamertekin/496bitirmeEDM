@@ -126,7 +126,7 @@ export default function Signup() {
               <PasswordInput
                 placeholder="Şifre"
                 label="Şifre"
-                description="Şifre en az 6 haneden oluşmalıdır."
+                description=""
                 id="password"
                 name="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -138,7 +138,7 @@ export default function Signup() {
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
               <Button
-                m={-6}
+                m={-10}
                 sx={{ backgroundColor: headerBlue }}
                 onClick={handleSubmit}
               >

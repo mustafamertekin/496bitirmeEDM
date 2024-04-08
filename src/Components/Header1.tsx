@@ -21,6 +21,12 @@ export function Header1() {
     await doSignOut();
     navigate("/login");
   };
+  const handleProfile =  async () =>  {
+    navigate("/profile");
+  }
+   const handleHome =  async () =>  {
+    navigate("/dataframe");
+  }
 
   return (
     <Box sx={{backgroundColor:headerBlue}}>
@@ -29,17 +35,17 @@ export function Header1() {
           <Image src={logo} width={102}  />
           { userLoggedIn? (
             <Group>
+              <Button sx={{ backgroundColor: headerBlue }} onClick={handleHome} >
+               Anasayfa 
+              </Button>
+              <Button sx={{ backgroundColor: headerBlue }} onClick={handleProfile} >
+               Bilgilerim 
+              </Button>
               <Button sx={{ backgroundColor: headerBlue }} >
               Bize Ulaşın 
               </Button>
               <Button sx={{ backgroundColor: headerBlue }} >
-              Güvenlik
-              </Button>
-              <Button sx={{ backgroundColor: headerBlue }} >
               Hakkında 
-              </Button>
-              <Button sx={{ backgroundColor: headerBlue }} >
-              Kariyer 
               </Button>
               <Button sx={{ backgroundColor: "red" ,color: "white"}} onClick={handleLogout}>
                Çıkış Yap 

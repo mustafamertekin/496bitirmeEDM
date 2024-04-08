@@ -78,7 +78,7 @@ export function Login() {
           mt={10}
           color="white"
           label="Şifre"
-          placeholder="şifreni gir"
+          placeholder="Şifreni gir"
           value={password}
           onChange={setPassword}
         />

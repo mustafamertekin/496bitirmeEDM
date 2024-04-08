@@ -42,11 +42,5 @@ export function Anasayfa() {
   );
 }
 
-const links = [
-  { link: '#', label: 'Bize Ulaşın' },
-  { link: '#', label: 'Güvenlik' },
-  { link: '#', label: 'Hakkında' },
-  { link: '#', label: 'Kariyer' },
-];
 
 
