@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { auth,db } from "../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
-import { doc, updateDoc, arrayUnion, arrayRemove, setDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, arrayRemove, setDoc, deleteDoc, collection, where, query } from "firebase/firestore";
 
 export default function Signup() {
   const [isRegisterComplete, setIsRegisterComplete] = useState(false);

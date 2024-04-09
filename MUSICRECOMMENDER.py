@@ -18,8 +18,9 @@ def generate_song_names():
     data = request.get_json()
     app_input1 = data.get('songName')
     app_input2 = data.get('artist')
-    app_input3 = data.get('genrpipe')
+    app_input3 = data.get('genre')
     app_input4 = data.get('likedSongs')
+    print(app_input4)
     app_input5 = data.get('likedArtists')
     question = ""
     if app_input2 == "" and app_input3 == "": # Only song input

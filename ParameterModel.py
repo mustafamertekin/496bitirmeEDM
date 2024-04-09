@@ -100,7 +100,7 @@ def generate_song_features():
     print("")
     print(audio_features['speechiness'])
     print(audio_features['energy'])
-    return jsonify(songFeatures=speechiness_pred+" "+energy_pred)
+    return jsonify(songSpeechiness=speechiness_pred[0],songEnergy=energy_pred[0])
 
 if __name__ == '__main__':
     app.run(debug=True,port=5001)

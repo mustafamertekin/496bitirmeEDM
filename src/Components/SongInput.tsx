@@ -4,7 +4,7 @@ import classes from './ButtonProgress.module.css';
 import { useInterval } from '@mantine/hooks';
 import { auth,db } from '../firebase/firebase';
 import { useAuth } from '../context/authContext';
-import { doc, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc, getDocs, collection } from "firebase/firestore";
 
 interface AutocompleteLoadingProps {}
 
@@ -16,9 +16,9 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
   const [value2, setValue2] = useState('');
   const [value3, setValue3] = useState('');
   const [loading, setLoading] = useState(false);
-  const [likedSongs, setLikedSongs]=useState<string[]>(); 
-  const [likedArtists, setLikedArtists]=useState<string[]>(); 
-
+  const [likedSongs, setLikedSongs]=useState<Object[]>(); 
+  const [likedArtists, setLikedArtists]=useState<Object[]>(); 
+  let testSongs= [];
   const handleChange = (val: string) => {
     setValue(val);
   };
@@ -38,10 +38,10 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     });
   }
 
-  const addSongToDB = async () => {
+  const addSongToDB = async (speech:string,energy:string,songName:string) => {
     const Users = doc(db, "Users", auth.currentUser!.uid);
     await updateDoc(Users, {
-      likedSongs: arrayUnion(value)
+      likedSongs: arrayUnion("songName:"+songName+"!songEnergy:"+energy+"!songSpeechiness:"+speech+"!")
     });
   }
 
@@ -64,6 +64,28 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       }
     }
   };
+
+  const fetchSpotify = async (s:string) => {
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ songName: s }),
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5001/generate_song_features', requestOptions);
+      const data = await response.json();
+      const speechiness= data.songSpeechiness
+      const energy= data.songEnergy
+      console.log(data.speechiness)
+      console.log(data)
+      addSongToDB(speechiness,energy,s)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+  }
+
   const handleClick = async () => {
     setLoading(true);
     
@@ -100,7 +122,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
         }}
         data={[]}
       />
-      <Button size="sm" style={{ marginTop: '10px' }} onClick={addSongToDB} >Şarkıyı profilime ekle</Button>
+      <Button size="sm" style={{ marginTop: '10px' }} onClick={() => fetchSpotify(value)} >Şarkıyı profilime ekle</Button>
     </div>
 
     <div className={classes.autocompleteContainer}>
@@ -130,7 +152,6 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
         }}
         data={[]}
       />
-      <Button size="sm" style={{ marginTop: '10px'}} >Müzik türünü profilime ekle</Button>
     </div>
       <div className={classes.buttonContainer}>
         <Button fullWidth onClick={fetchUserData}  style={{ marginTop: '30px' }} disabled={loading}>
@@ -146,43 +167,43 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     >
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[0]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[0])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[0])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}} >{results[1]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[1])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[1])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}} >{results[2]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[2])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[2])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[3]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[3])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[3])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[4]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[4])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[4])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[5]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[5])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[5])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[6]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[6])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[6])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[7]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[7])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[7])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[8]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[8])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[8])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[9]}</Button>
-      <Button size="xs" onClick={() => addSongFromRec(results[9])} style={{marginLeft:'10px'}}>Profilime Ekle</Button>
+      <Button size="xs" onClick={() => fetchSpotify(results[9])} style={{marginLeft:'10px'}}>Profilime Ekle</Button>
     </div>
 
     </Stack>}
