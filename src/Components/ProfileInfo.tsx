@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { doc, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc } from "firebase/firestore";
 import { auth,db } from '../firebase/firebase';
@@ -40,23 +40,35 @@ const Text = styled.span<{ size?: string; fw?: number }>`
 `;
 
 
-export const MyTable: React.FC<{ title: string; names: string[] }> = ({ title, names: initialNames }) => {
-  const [names, setNames] = useState<string[]>(initialNames); // State to manage names array
+export const MyTable: React.FC<{ title: string; names: string[]; onDelete:  (arr: string[]) => Promise<void> }> = ({ title, names: initialNames, onDelete }) => {
+  const [names, setNames] = useState<string[]>(initialNames); 
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
+ 
 
-  const toggleRow = (index: number) => {
-    if (selectedRows.includes(index)) {
-      setSelectedRows(selectedRows.filter((rowIndex) => rowIndex !== index));
-    } else {
-      setSelectedRows([...selectedRows, index]);
-    }
-  };
+  const toggleRow = useCallback((index: number) => {
+      if (selectedRows.includes(index)) {
+          setSelectedRows(selectedRows.filter((rowIndex) => rowIndex !== index));
+      } else {
+          setSelectedRows([...selectedRows, index]);
+      }
+      }, [selectedRows, setSelectedRows]
+  );
 
-  const deleteSelectedRows = () => {
-    const filteredNames = names.filter((name, index) => !selectedRows.includes(index));
-    setNames(filteredNames); // Update the names array
-    setSelectedRows([]); // Clear selected rows
-  };
+  const deleteSelectedRows = useCallback(async() => {
+      const filteredNames = names.filter((name, index) => !selectedRows.includes(index));
+      const valuesToDelete = names.filter((name, index) => selectedRows.includes(index));
+      setNames(filteredNames); // Update the names array
+      setSelectedRows([]); // Clear selected rows
+      console.log(valuesToDelete)
+      await onDelete(valuesToDelete)
+     
+      }, [selectedRows, names, setNames, setSelectedRows, onDelete]
+      
+  );
+
+  useEffect(() => {
+      setNames(initialNames);
+  }, [initialNames]);
 
   return (
     <TableContainer>
@@ -89,8 +101,8 @@ const headerBlue = '#1F2D5A';
 
 export default function ProfileInfo() {
   // Data for the table
-  const [songs, setSongs] = useState(['Diamonds', 'Whistle', 'Kara Toprak']);
-  const [artists, setArtists] = useState(['Tarkan', 'Adele', 'Sam Smith']);
+  const [songs, setSongs] = useState([]);
+  const [artists, setArtists] = useState([]);
   useEffect(() => {
     const fetchUserData = async () => {
       const userRef = doc(db, "Users", auth.currentUser!.uid);
@@ -98,8 +110,10 @@ export default function ProfileInfo() {
       if (userSnapshot.exists()) {
         const userData = userSnapshot.data();
         if (userData) {
+          console.log("Updated Songs:2", songs);
           setSongs(userData.likedSongs || []);
           setArtists(userData.likedArtists || []);
+          console.log("Updated Songs:3", songs);
         }
       }
     };
@@ -107,14 +121,30 @@ export default function ProfileInfo() {
     fetchUserData();
   }, []);
 
+  const onSongsDelete = useCallback( async (arr : string[]) => {
+    const Users = doc(db, "Users", auth.currentUser!.uid);
+    await updateDoc(Users, {
+      likedSongs: arrayRemove(...arr)
+    });
+  }  , [db, auth] )
+
+  const onArtistsDelete = useCallback( async (arr : string[]) => {
+    const Users = doc(db, "Users", auth.currentUser!.uid);
+    await updateDoc(Users, {
+      likedArtists: arrayRemove(...arr)
+    });
+  }  , [db, auth] )
+
+  
+
   useEffect(() => {
     console.log("Updated Songs:", songs);
   }, [songs]);
   return (
     <div style={{ display: 'flex', justifyContent: 'center', minHeight: '100vh', background: '#1F2D5A'  }}>
       <div style={{ display: 'flex', gap: '450px' }}>
-        <MyTable title="Beğenilen Şarkılar"  names={songs} />
-        <MyTable title="Beğenilen Sanatçılar"  names={artists} />
+        <MyTable title="Beğenilen Şarkılar"  names={songs} onDelete={onSongsDelete} />
+        <MyTable title="Beğenilen Sanatçılar"  names={artists} onDelete={onArtistsDelete} />
       </div>
     </div>
   );
