@@ -1,5 +1,5 @@
 import { Autocomplete, Button, Progress, Stack, useMantineTheme } from '@mantine/core';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import classes from './ButtonProgress.module.css';
 import { useInterval } from '@mantine/hooks';
 import { auth,db } from '../firebase/firebase';
@@ -31,28 +31,22 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     setValue3(val);
   };
 
-  const addSongFromRec= (songs: string)  => {
-    const Users = doc(db, "Users", auth.currentUser!.uid);
-    updateDoc(Users, {
-      likedSongs: arrayUnion(songs)
-    });
-  }
 
-  const addSongToDB = async (speech:string,energy:string,songName:string) => {
+  const addSongToDB = useCallback(async (speech:string,energy:string,songName:string) => {
     const Users = doc(db, "Users", auth.currentUser!.uid);
     await updateDoc(Users, {
       likedSongs: arrayUnion(songName+"!"+energy+"!"+speech)
     });
-  }
+  },[db,auth])
 
-  const addArtistToDB = async () => {
+  const addArtistToDB = useCallback(async () => {
     const Users = doc(db, "Users", auth.currentUser!.uid);
     await updateDoc(Users, {
       likedArtists: arrayUnion(value2)
     });
-  }
+  },[db,auth,value2])
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     const userRef = doc(db, "Users", auth.currentUser!.uid);
     const userSnapshot = await getDoc(userRef);
     if (userSnapshot.exists()) {
@@ -63,7 +57,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
         handleClick();
       }
     }
-  };
+  },[db,auth])
 
   const fetchSpotify = async (s:string) => {
     const requestOptions: RequestInit = {
@@ -86,7 +80,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
 
   }
 
-  const handleClick = async () => {
+  const handleClick = useCallback( async () => {
     setLoading(true);
     
 
@@ -106,7 +100,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       console.error('Error:', error);
     }
     setLoading(false);
-  };
+  },[likedSongs,likedArtists,value,value2,value3]);
 
   return (
     <div className={classes.container}>
