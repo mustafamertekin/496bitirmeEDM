@@ -125,16 +125,46 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       bg="var(--mantine-color-body)"
 
     >
-      <Button variant="default">{results[0]}</Button>
-      <Button variant="default">{results[1]}</Button>
-      <Button variant="default">{results[2]}</Button>
-      <Button variant="default">{results[3]}</Button>
-      <Button variant="default">{results[4]}</Button>
-      <Button variant="default">{results[5]}</Button>
-      <Button variant="default">{results[6]}</Button>
-      <Button variant="default">{results[7]}</Button>
-      <Button variant="default">{results[8]}</Button>
-      <Button variant="default">{results[9]}</Button>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[0]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}} >{results[1]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}} >{results[2]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[3]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[4]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[5]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[6]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[7]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[8]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+    </div>
+    <div>
+      <Button variant="default" style={{minWidth:'400px'}}>{results[9]}</Button>
+      <Button size="xs" style={{marginLeft:'10px'}}>Profilime Ekle</Button>
+    </div>
 
     </Stack>}
     </div>

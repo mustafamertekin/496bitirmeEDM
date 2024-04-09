@@ -27,6 +27,10 @@ export function Header1() {
    const handleHome =  async () =>  {
     navigate("/dataframe");
   }
+  const handleContact =  async () =>  {
+    navigate("/getInTouch");
+  }
+
 
   return (
     <Box sx={{backgroundColor:headerBlue}}>
@@ -41,10 +45,10 @@ export function Header1() {
               <Button sx={{ backgroundColor: headerBlue }} onClick={handleProfile} >
                Bilgilerim 
               </Button>
-              <Button sx={{ backgroundColor: headerBlue }} >
+              <Button sx={{ backgroundColor: headerBlue }} onClick={handleContact} >
               Bize Ulaşın 
               </Button>
-              <Button sx={{ backgroundColor: headerBlue }} >
+              <Button sx={{ backgroundColor: headerBlue }}  >
               Hakkında 
               </Button>
               <Button sx={{ backgroundColor: "red" ,color: "white"}} onClick={handleLogout}>
