@@ -1,6 +1,8 @@
 import { Button } from '@mantine/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { doc, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc } from "firebase/firestore";
+import { auth,db } from '../firebase/firebase';
 
 const TableContainer = styled.div`
   display: flex;
@@ -36,6 +38,7 @@ const Text = styled.span<{ size?: string; fw?: number }>`
   font-size: ${(props) => props.size || 'inherit'};
   font-weight: ${(props) => props.fw || 'inherit'};
 `;
+
 
 export const MyTable: React.FC<{ title: string; names: string[] }> = ({ title, names: initialNames }) => {
   const [names, setNames] = useState<string[]>(initialNames); // State to manage names array
@@ -86,15 +89,37 @@ const headerBlue = '#1F2D5A';
 
 export default function ProfileInfo() {
   // Data for the table
-  const names = ['Diamonds', 'Whistle', 'Kara Toprak'];
-  const names1 = ['Tarkan', 'Adele', 'Sam Smith'];
+  const [songs, setSongs] = useState(['Diamonds', 'Whistle', 'Kara Toprak']);
+  const [artists, setArtists] = useState(['Tarkan', 'Adele', 'Sam Smith']);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userRef = doc(db, "Users", auth.currentUser!.uid);
+      const userSnapshot = await getDoc(userRef);
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.data();
+        if (userData) {
+          setSongs(userData.likedSongs || []);
+          setArtists(userData.likedArtists || []);
+        }
+      }
+    };
 
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Updated Songs:", songs);
+  }, [songs]);
   return (
     <div style={{ display: 'flex', justifyContent: 'center', minHeight: '100vh', background: '#1F2D5A'  }}>
       <div style={{ display: 'flex', gap: '450px' }}>
-        <MyTable title="Beğenilen Şarkılar"  names={names} />
-        <MyTable title="Beğenilen Sanatçılar"  names={names1} />
+        <MyTable title="Beğenilen Şarkılar"  names={songs} />
+        <MyTable title="Beğenilen Sanatçılar"  names={artists} />
       </div>
     </div>
   );
 }
+function getNote() {
+  throw new Error('Function not implemented.');
+}
+
