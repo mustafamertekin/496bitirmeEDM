@@ -1,4 +1,6 @@
 import pandas as pd
+from flask import jsonify, Flask, request
+from flask_cors import CORS
 from sklearn.tree import DecisionTreeRegressor
 import base64
 import requests
@@ -8,7 +10,8 @@ import os
 load_dotenv()
 client_id = os.getenv("SPOTIFY_CLIENT_KEY")
 client_secret = os.getenv("SPOTIFY_SECRET_KEY")
-
+app = Flask(__name__)
+CORS(app)
 
 def get_token():
     auth_string = client_id + ":" + client_secret
@@ -60,38 +63,44 @@ def train_and_predict(x, y, predict_df):
 
 
 
-songName = "animals - martin garrix"
 
+@app.route('/generate_song_features', methods=['POST'])
+def generate_song_features():
+    data = request.get_json()
+    songName = data.get('songName')
+    track_id = search_for_song_id(get_token(),songName)
 
-track_id = search_for_song_id(get_token(),songName)
+    audio_features = get_audio_features(get_token(),track_id)
+    print(audio_features)
+    features = ['acousticness', 'danceability', 'tempo', 'instrumentalness', 'liveness', 'loudness', 'valence']
 
-audio_features = get_audio_features(get_token(),track_id)
-print(audio_features)
-features = ['acousticness', 'danceability', 'tempo', 'instrumentalness', 'liveness', 'loudness', 'valence']
+    predictSong_df = pd.DataFrame([[
+        audio_features['acousticness'],
+        audio_features['danceability'],
+        audio_features['tempo'],
+        audio_features['instrumentalness'],
+        audio_features['liveness'],
+        audio_features['loudness'],
+        audio_features['valence']
+    ]], columns=features)
 
-predictSong_df = pd.DataFrame([[
-    audio_features['acousticness'],
-    audio_features['danceability'],
-    audio_features['tempo'],
-    audio_features['instrumentalness'],
-    audio_features['liveness'],
-    audio_features['loudness'],
-    audio_features['valence']
-]], columns=features)
+    path = 'SpotifyFeatures.csv'
+    data = pd.read_csv(path)
+    data = data.dropna(axis=0)  # Eksik değerleri kaldır
 
-path = 'SpotifyFeatures.csv'
-data = pd.read_csv(path)
-data = data.dropna(axis=0)  # Eksik değerleri kaldır
+    y1 = data['speechiness']
+    y2 = data['energy']
+    x = data[features]
 
-y1 = data['speechiness']
-y2 = data['energy']
-x = data[features]
+    speechiness_pred = train_and_predict(x, y1, predictSong_df)
+    energy_pred = train_and_predict(x, y2, predictSong_df)
 
-speechiness_pred = train_and_predict(x, y1, predictSong_df)
-energy_pred = train_and_predict(x, y2, predictSong_df)
+    print(speechiness_pred)
+    print(energy_pred)
+    print("")
+    print(audio_features['speechiness'])
+    print(audio_features['energy'])
+    return jsonify(songFeatures=speechiness_pred+" "+energy_pred)
 
-print(speechiness_pred)
-print(energy_pred)
-print("")
-print(audio_features['speechiness'])
-print(audio_features['energy'])
+if __name__ == '__main__':
+    app.run(debug=True)
