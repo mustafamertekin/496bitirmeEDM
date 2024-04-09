@@ -1,12 +1,14 @@
 from flask import Flask, request, jsonify
 import google.generativeai as ai
 from flask_cors import CORS  
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app)  
-
+load_dotenv()
 # Configure the AI model
-KEY = 'AIzaSyB84B5behHBqbACHSE6f1G_hEgas1xCT5Q'
+KEY = os.getenv("GEMINI_API_KEY")
 ai.configure(api_key=KEY)
 model = ai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])

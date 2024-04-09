@@ -2,9 +2,12 @@ import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
 import base64
 import requests
+from dotenv import load_dotenv
+import os
 
-client_id = "808e5798c1e748e290809e8e4b33b20e"
-client_secret = "a8cdb31bb1404fcf83a56a63707ae1b0"
+load_dotenv()
+client_id = os.getenv("SPOTIFY_CLIENT_KEY")
+client_secret = os.getenv("SPOTIFY_SECRET_KEY")
 
 
 def get_token():
