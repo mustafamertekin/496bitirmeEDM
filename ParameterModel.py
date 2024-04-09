@@ -13,6 +13,7 @@ client_secret = os.getenv("SPOTIFY_SECRET_KEY")
 app = Flask(__name__)
 CORS(app)
 
+
 def get_token():
     auth_string = client_id + ":" + client_secret
     auth_bytes = auth_string.encode("utf-8")
@@ -40,7 +41,7 @@ def search_for_song_id(token, song_name):
     query = f"q={song_name}&type=track&limit=1"
     query_url = f"{url}?{query}"
     result = requests.get(query_url, headers=headers)
-    json_result=result.json()
+    json_result = result.json()
     return json_result['tracks']['items'][0]['id']
 
 
@@ -52,27 +53,26 @@ def get_audio_features(token, track_id):
     return audio_features
 
 
+path = 'SpotifyFeatures.csv'
+data = pd.read_csv(path)
+data = data.dropna(axis=0)  # Eksik değerleri kaldır
+y1 = data['speechiness']
+y2 = data['energy']
 
-
-
-def train_and_predict(x, y, predict_df):
-    model = DecisionTreeRegressor(random_state=1)
-    model.fit(x, y)
-    return model.predict(predict_df)
-
-
-
+features = ['acousticness', 'danceability', 'tempo', 'instrumentalness', 'liveness', 'loudness', 'valence']
+x = data[features]
+model1 = DecisionTreeRegressor(random_state=1).fit(x, y1)
+model2 = DecisionTreeRegressor(random_state=1).fit(x, y2)
 
 
 @app.route('/generate_song_features', methods=['POST'])
 def generate_song_features():
     data = request.get_json()
     songName = data.get('songName')
-    track_id = search_for_song_id(get_token(),songName)
+    track_id = search_for_song_id(get_token(), songName)
 
-    audio_features = get_audio_features(get_token(),track_id)
+    audio_features = get_audio_features(get_token(), track_id)
     print(audio_features)
-    features = ['acousticness', 'danceability', 'tempo', 'instrumentalness', 'liveness', 'loudness', 'valence']
 
     predictSong_df = pd.DataFrame([[
         audio_features['acousticness'],
@@ -84,23 +84,16 @@ def generate_song_features():
         audio_features['valence']
     ]], columns=features)
 
-    path = 'SpotifyFeatures.csv'
-    data = pd.read_csv(path)
-    data = data.dropna(axis=0)  # Eksik değerleri kaldır
-
-    y1 = data['speechiness']
-    y2 = data['energy']
-    x = data[features]
-
-    speechiness_pred = train_and_predict(x, y1, predictSong_df)
-    energy_pred = train_and_predict(x, y2, predictSong_df)
+    speechiness_pred = model1.predict(predictSong_df)
+    energy_pred = model2.predict(predictSong_df)
 
     print(speechiness_pred)
     print(energy_pred)
     print("")
     print(audio_features['speechiness'])
     print(audio_features['energy'])
-    return jsonify(songSpeechiness=speechiness_pred[0],songEnergy=energy_pred[0])
+    return jsonify(songSpeechiness=speechiness_pred[0], songEnergy=energy_pred[0])
+
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5001)
+    app.run(debug=True, port=5001)
