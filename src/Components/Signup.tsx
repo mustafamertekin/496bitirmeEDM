@@ -15,9 +15,10 @@ import { IconAt, IconCheck, IconX } from "@tabler/icons";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { sha256 } from "js-sha256";
 import { useEffect, useState } from "react";
-import { auth } from "../firebase/firebase";
+import { auth,db } from "../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
+import { doc, updateDoc, arrayUnion, arrayRemove, setDoc } from "firebase/firestore";
 
 export default function Signup() {
   const [isRegisterComplete, setIsRegisterComplete] = useState(false);
@@ -30,7 +31,7 @@ export default function Signup() {
   const headerBlue = "#1F2D5A";
 
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isRegistering) {
       setIsRegistering(true);
 
@@ -47,6 +48,11 @@ export default function Signup() {
           console.log(res);
           if(res){
             setIsRegisterComplete(true);
+            const Users = doc(db, "Users", auth.currentUser!.uid);
+            setDoc(Users,{
+              likedSongs:[],
+              likedArtists:[]
+            })
           }
           setIsRegistering(false);
         });

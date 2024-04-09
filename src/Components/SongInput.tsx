@@ -2,12 +2,15 @@ import { Autocomplete, Button, Progress, Stack, useMantineTheme } from '@mantine
 import React, { useState } from 'react';
 import classes from './ButtonProgress.module.css';
 import { useInterval } from '@mantine/hooks';
+import { auth,db } from '../firebase/firebase';
+import { useAuth } from '../context/authContext';
+import { doc, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc } from "firebase/firestore";
 
 interface AutocompleteLoadingProps {}
 
 const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
  
-
+  const {userLoggedIn}= useAuth();
   const [results, setResults] = useState('');;
   const [value, setValue] = useState('');
   const [value2, setValue2] = useState('');
@@ -25,6 +28,23 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
   const handleChange3 = (val: string) => {
     setValue3(val);
   };
+
+  const addSongToDB = async () => {
+    const Users = doc(db, "Users", auth.currentUser!.uid);
+    await updateDoc(Users, {
+      likedSongs: arrayUnion(value)
+    });
+    /*await getDoc(Users).then((res)=>{
+      console.log(res.data()); 
+    })*/
+  }
+
+  const addArtistToDB = async () => {
+    const Users = doc(db, "Users", auth.currentUser!.uid);
+    await updateDoc(Users, {
+      likedArtists: arrayUnion(value2)
+    });
+  }
 
   const handleClick = async () => {
     setLoading(true);
@@ -61,7 +81,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
         }}
         data={[]}
       />
-      <Button size="sm" style={{ marginTop: '10px' }}>Şarkıyı profilime ekle</Button>
+      <Button size="sm" style={{ marginTop: '10px' }} onClick={addSongToDB} >Şarkıyı profilime ekle</Button>
     </div>
 
     <div className={classes.autocompleteContainer}>
@@ -76,7 +96,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
         }}
         data={[]}
       />
-      <Button size="sm" style={{ marginTop: '10px' }} >Müzisyeni profilime ekle</Button>
+      <Button size="sm" style={{ marginTop: '10px' }} onClick={addArtistToDB} >Müzisyeni profilime ekle</Button>
     </div>
 
     <div className={classes.autocompleteContainer}>
