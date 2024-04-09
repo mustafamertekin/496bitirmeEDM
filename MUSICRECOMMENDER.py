@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from flask import Flask, request, jsonify
 import google.generativeai as ai
 from flask_cors import CORS  
@@ -16,7 +17,14 @@ chat = model.start_chat(history=[])
 @app.route('/generate_song_names', methods=['POST'])
 def generate_song_names():
     data = request.get_json()
-    print(data.get('likedSongs'))
+
+
+    app_input1 = ""
+    app_input2 = ""
+    app_input3 = ""
+    app_input4 = ""
+    app_input5 = ""
+
     app_input1 = data.get('songName')
     app_input2 = data.get('artist')
     app_input3 = data.get('genre')
@@ -44,38 +52,41 @@ def generate_song_names():
         song_energyArray.append(song_energy)
         song_speechinessArray.append(song_speechiness)
     
+
+    
     average_energy = sum(song_energyArray) / len(song_energyArray)
     average_speechiness = sum(song_speechinessArray) / len(song_speechinessArray)
 
     print("Average Energy:", average_energy)
     print("Average Speechiness:", average_speechiness)
 
+        
+    if app_input3 != "" and len(app_input5) == 0 and len(app_input4) == 0: # Only genre
+        question = f"Give me 10 {app_input3} song recommendations and write only the artist name and song names. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("1")
+    elif app_input3 == "" and len(app_input5) != 0 and len(app_input4) == 0: # Only artists
+        question = f"Give me 10 song recommendations and write only the artist name and song names. I like the artists {', '.join(str(element) for element in app_input5)}. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("2")
+   
+    elif app_input3 == "" and len(app_input5) == 0 and len(app_input4) != 0 : # Only songs
+        question = f"Give me 10 song recommendations and write only the artist name and song names. I like the songs {', '.join(str(element) for element in song_namesArray)}. I usually like songs that are {average_energy} out of 1 energetic and {average_speechiness} out of 1 speechful. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("3")
+    elif app_input3 == "" and len(app_input5) != 0 and len(app_input4) != 0: # songs and artist, no genre
+        question = f"Give me 10  song recommendations and write only the artist name and song names. I like the songs {', '.join(str(element) for element in song_namesArray)}. I like the artists {', '.join(str(element) for element in app_input5)}. I usually like songs that are {average_energy} out of 1 energetic and {average_speechiness} out of 1 speechful. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("4")
+    elif app_input3 != "" and len(app_input5) != 0 and len(app_input4) == 0 : # artist and genre, no songs
+        question = f"Give me 10 {app_input3} song recommendations and write only the artist name and song names. I like the artists {', '.join(str(element) for element in app_input5)}. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("5")
+    elif app_input3 != "" and len(app_input5) == 0 and len(app_input4) != 0:  # songs and genre, no artist
+        question = f"Give me 10 {app_input3} song recommendations and write only the artist name and song names. I like the songs {', '.join(str(element) for element in song_namesArray)}. I usually like songs that are {average_energy} out of 1 energetic and {average_speechiness} out of 1 speechful. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("6")
+    elif app_input3 == "" and len(app_input5) == 0 and len(app_input4) == 0: #Everything
+        question = f"Give me 10 {app_input3} song recommendations and write only the artist name and song names. I like the songs {', '.join(str(element) for element in song_namesArray)}. I like the artists {', '.join(str(element) for element in app_input5)}. I usually like songs that are {average_energy} out of 1 energetic and {average_speechiness} out of 1 speechful. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("7")
+    else:
+        question = f"Give me 10 song recommendations of your choice and write only the artist name and song names. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
+        print("8")
     
-    question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the song {app_input1}. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-    
-    if app_input1 == "" and app_input2 == "" and app_input3 == "":
-        question = f"Give me 10 song recommendations and write only the artist name and song names. I like the songs {', '.join(str(element) for element in song_namesArray)}. I usually like songs that are {average_energy} out of 1 energetic and {average_speechiness} out of 1 speechful. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-
-
-    # if app_input1 != "" and app_input2 != "" and app_input3 != "":
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the song {app_input1}. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-
-    # if app_input2 == "" and app_input3 == "": # Only song input
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the song {app_input1}. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-    # if app_input1 == "" and app_input2 == "": # Only genre input
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be from the genre {app_input3}.Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-    # if app_input1 == "" and app_input3 == "": # Only artist input
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the songs of the artist {app_input2}.Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-
-    # if app_input2 != "" and app_input3 != "" and app_input1 == "": # Genre and artist input
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the songs of the artist {app_input2} and should be from the genre {app_input3}.Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-    # if app_input2 != "" and app_input3 == "" and app_input1 != "": # Song and artist input
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the song {app_input1} and should also be similar to the songs of the artist {app_input2}.Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-    # if app_input2 == "" and app_input3 != "" and app_input1 != "": # Song and genre input
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the song {app_input1} and should be from the genre {app_input3}.Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-    # if app_input2 != "" and app_input3 != "" and app_input1 != "": # Song, artist and genreinput
-    #     question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the song {app_input1}, should be similar to the songs of the artist {app_input2} and should be from the genre {app_input3}.Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."
-
     print(question)
 
     response = chat.send_message(question)

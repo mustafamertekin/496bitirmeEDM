@@ -7,7 +7,7 @@ import { auth,db } from '../firebase/firebase';
 const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
 `;
 
 const TableTitle = styled.h2`

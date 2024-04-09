@@ -96,8 +96,4 @@ def generate_song_features():
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     app.run(debug=True, port=5001)
-=======
-    app.run(debug=True, port=5001)
->>>>>>> 46ffca40513e464953f85dbd2244ceb20afef6c8

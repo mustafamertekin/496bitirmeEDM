@@ -54,10 +54,15 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       if (userData) {
         setLikedSongs(userData.likedSongs || []);
         setLikedArtists(userData.likedArtists || []);
-        handleClick();
+        return userData;
       }
     }
+    return undefined;
   },[db,auth])
+
+  const newHandleCLick = useCallback(() =>{
+    fetchUserData().then((res) => {if(res) handleClick(value, value2, value3, res.likedSongs, res.likedArtists)})
+  }, [value,value2,value3])
 
   const fetchSpotify = async (s:string) => {
     const requestOptions: RequestInit = {
@@ -80,27 +85,30 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
 
   }
 
-  const handleClick = useCallback( async () => {
-    setLoading(true);
-    
-
-    const requestOptions: RequestInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ songName: value, artist: value2, genre: value3,likedSongs: likedSongs, likedArtists:likedArtists }),
-    };
-
-    try {
-      const response = await fetch('http://127.0.0.1:5000/generate_song_names', requestOptions);
-      const data = await response.json();
-      console.log(data.songNames);
-      setResults(data.songNames);
-      console.log(String(results[0]));
-    } catch (error) {
-      console.error('Error:', error);
+  
+  
+  
+  const handleClick = async (v: string, v2:string, v3:string, ls:string[], la:string[] ) => {
+      setLoading(true);
+      console.log(ls) 
+  
+      const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ songName: v, artist: v2, genre: v3,likedSongs: ls, likedArtists:la }),
+      };
+  
+      try {
+        const response = await fetch('http://127.0.0.1:5000/generate_song_names', requestOptions);
+        const data = await response.json();
+        console.log(data.songNames);
+        setResults(data.songNames);
+        console.log(String(results[0]));
+      } catch (error) {
+        console.error('Error:', error);
+      }
+      setLoading(false);
     }
-    setLoading(false);
-  },[likedSongs,likedArtists,value,value2,value3]);
 
   return (
     <div className={classes.container}>
@@ -148,7 +156,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       />
     </div>
       <div className={classes.buttonContainer}>
-        <Button fullWidth onClick={fetchUserData}  style={{ marginTop: '30px' }} disabled={loading}>
+        <Button fullWidth onClick={newHandleCLick}  style={{ marginTop: '30px' }} disabled={loading}>
           {loading ? 'Öneriler Bulunuyor' : 'Şarkı Önerisi Yap'}
         </Button>
         {loading && <Progress color="red" radius="sm" />}
