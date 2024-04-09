@@ -1,3 +1,10 @@
+496 bitirme projesidir. Spotify verileri kullanilarak model egitilip modelden cikan verileri Gemini a beslemekteyiz. Kisiye ozel profil sistemi ve profile ozel muzik kaydetme sistemi mevcuttur. Kaydedilen muziklerin icinde modelden gelen ekstra veriler olan Speechiness ve Energy mevcuttur. Bu degerlerle kisiye ozel daha iyi oneriler yapilmaktadir.
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
