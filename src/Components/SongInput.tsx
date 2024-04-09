@@ -34,9 +34,6 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     await updateDoc(Users, {
       likedSongs: arrayUnion(value)
     });
-    /*await getDoc(Users).then((res)=>{
-      console.log(res.data()); 
-    })*/
   }
 
   const addArtistToDB = async () => {
@@ -127,43 +124,43 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     >
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[0]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}} >{results[1]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}} >{results[2]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[3]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[4]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[5]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[6]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[7]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[8]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[9]}</Button>
-      <Button size="xs" style={{marginLeft:'10px'}}>Profilime Ekle</Button>
+      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}}>Profilime Ekle</Button>
     </div>
 
     </Stack>}

@@ -28,6 +28,7 @@
     "dayjs": "^1.11.7",
     "embla-carousel-react": "^7.0.9",
     "firebase": "^10.8.0",
+    "flask": "^0.2.10",
     "influx": "^5.9.3",
     "js-sha256": "^0.9.0",
     "react": "^18.2.0",
