@@ -17,6 +17,8 @@ def generate_song_names():
     app_input1 = data.get('songName')
     app_input2 = data.get('artist')
     app_input3 = data.get('genrpipe')
+    app_input4 = data.get('likedSongs')
+    app_input5 = data.get('likedArtists')
     question = ""
     if app_input2 == "" and app_input3 == "": # Only song input
         question = f"Give me 10 song recommendatitons and write only the artist name and song names. These songs should be similar to the song {app_input1}. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION."

@@ -16,6 +16,8 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
   const [value2, setValue2] = useState('');
   const [value3, setValue3] = useState('');
   const [loading, setLoading] = useState(false);
+  const [likedSongs, setLikedSongs]=useState<string[]>(); 
+  const [likedArtists, setLikedArtists]=useState<string[]>(); 
 
   const handleChange = (val: string) => {
     setValue(val);
@@ -50,13 +52,26 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     });
   }
 
+  const fetchUserData = async () => {
+    const userRef = doc(db, "Users", auth.currentUser!.uid);
+    const userSnapshot = await getDoc(userRef);
+    if (userSnapshot.exists()) {
+      const userData = userSnapshot.data();
+      if (userData) {
+        setLikedSongs(userData.likedSongs || []);
+        setLikedArtists(userData.likedArtists || []);
+        handleClick();
+      }
+    }
+  };
   const handleClick = async () => {
     setLoading(true);
+    
 
     const requestOptions: RequestInit = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ songName: value, artist: value2, genre: value3 }),
+      body: JSON.stringify({ songName: value, artist: value2, genre: value3,likedSongs: likedSongs, likedArtists:likedArtists }),
     };
 
     try {
@@ -118,7 +133,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
       <Button size="sm" style={{ marginTop: '10px'}} >Müzik türünü profilime ekle</Button>
     </div>
       <div className={classes.buttonContainer}>
-        <Button fullWidth onClick={handleClick}  style={{ marginTop: '30px' }} disabled={loading}>
+        <Button fullWidth onClick={fetchUserData}  style={{ marginTop: '30px' }} disabled={loading}>
           {loading ? 'Öneriler Bulunuyor' : 'Şarkı Önerisi Yap'}
         </Button>
         {loading && <Progress color="red" radius="sm" />}
