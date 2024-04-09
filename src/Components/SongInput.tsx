@@ -41,7 +41,7 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
   const addSongToDB = async (speech:string,energy:string,songName:string) => {
     const Users = doc(db, "Users", auth.currentUser!.uid);
     await updateDoc(Users, {
-      likedSongs: arrayUnion("songName:"+songName+"!songEnergy:"+energy+"!songSpeechiness:"+speech+"!")
+      likedSongs: arrayUnion(songName+"!"+energy+"!"+speech)
     });
   }
 

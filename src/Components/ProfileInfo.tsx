@@ -85,7 +85,7 @@ export const MyTable: React.FC<{ title: string; names: string[]; onDelete:  (arr
           <TableCell flex={2}>
             <div style={{ display: 'flex', alignItems: 'center'}}>
               <Text size="small" fw={500}>
-                {name}
+                {name.split("!")[0]}
               </Text>
             </div>
           </TableCell>
