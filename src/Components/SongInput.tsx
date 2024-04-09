@@ -29,6 +29,13 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     setValue3(val);
   };
 
+  const addSongFromRec= (songs: string)  => {
+    const Users = doc(db, "Users", auth.currentUser!.uid);
+    updateDoc(Users, {
+      likedSongs: arrayUnion(songs)
+    });
+  }
+
   const addSongToDB = async () => {
     const Users = doc(db, "Users", auth.currentUser!.uid);
     await updateDoc(Users, {
@@ -124,43 +131,43 @@ const AutocompleteLoading: React.FC<AutocompleteLoadingProps> = () => {
     >
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[0]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[0])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}} >{results[1]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[1])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}} >{results[2]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[2])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[3]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[3])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[4]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[4])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[5]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[5])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[6]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[6])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[7]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[7])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[8]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[8])} style={{marginLeft:'10px'}} >Profilime Ekle</Button>
     </div>
     <div>
       <Button variant="default" style={{minWidth:'400px'}}>{results[9]}</Button>
-      <Button size="xs" onClick={addSongToDB} style={{marginLeft:'10px'}}>Profilime Ekle</Button>
+      <Button size="xs" onClick={() => addSongFromRec(results[9])} style={{marginLeft:'10px'}}>Profilime Ekle</Button>
     </div>
 
     </Stack>}
