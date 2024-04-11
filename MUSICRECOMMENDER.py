@@ -80,7 +80,7 @@ def generate_song_names():
     elif app_input3 != "" and len(app_input5) == 0 and len(app_input4) != 0:  # songs and genre, no artist
         question = f"Give me 10 {app_input3} song recommendations and write only the artist name and song names. I like the songs {', '.join(str(element) for element in song_namesArray)}. I usually like songs that are {average_energy} out of 1 energetic and {average_speechiness} out of 1 speechful. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
         print("6")
-    elif app_input3 == "" and len(app_input5) == 0 and len(app_input4) == 0: #Everything
+    elif app_input3 != "" and len(app_input5) != 0 and len(app_input4) != 0: #Everything
         question = f"Give me 10 {app_input3} song recommendations and write only the artist name and song names. I like the songs {', '.join(str(element) for element in song_namesArray)}. I like the artists {', '.join(str(element) for element in app_input5)}. I usually like songs that are {average_energy} out of 1 energetic and {average_speechiness} out of 1 speechful. Only give 10 song names and 10 artist names DO NOT GIVE ANYTHING ELSE AT ANY CONDITION.NO NUMBERING"
         print("7")
     else:
