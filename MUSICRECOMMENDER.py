@@ -51,14 +51,11 @@ def generate_song_names():
         song_namesArray.append(song_name)
         song_energyArray.append(song_energy)
         song_speechinessArray.append(song_speechiness)
-    
 
+    if len(song_energyArray)!=0:
+        average_energy = sum(song_energyArray) / len(song_energyArray)
+        average_speechiness = sum(song_speechinessArray) / len(song_speechinessArray)
     
-    average_energy = sum(song_energyArray) / len(song_energyArray)
-    average_speechiness = sum(song_speechinessArray) / len(song_speechinessArray)
-
-    print("Average Energy:", average_energy)
-    print("Average Speechiness:", average_speechiness)
 
         
     if app_input3 != "" and len(app_input5) == 0 and len(app_input4) == 0: # Only genre
